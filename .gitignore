@@ -1,0 +1,6 @@
+.envrc
+.direnv/
+
+tags
+
+__pycache__/

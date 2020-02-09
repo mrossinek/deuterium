@@ -1,0 +1,24 @@
+*deuterium.txt*  In-line feedback for Python execution.
+
+Author:  Max Rossmannek
+License: MIT
+
+==============================================================================
+INTRODUCTION                                     *deuterium*
+
+Deuterium is a vim-implementation of the popular hydrogen plugin for Atom.
+Thus, it connects you to an IPython kernel running in the background which
+allows in-line feedback on the execution of your Python code.
+
+==============================================================================
+USAGE                                            *deuterium-usage*
+
+TODO
+
+==============================================================================
+CONFIGURATION                                    *deuterium-configuration*
+
+TODO
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:
