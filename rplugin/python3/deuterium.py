@@ -88,12 +88,13 @@ class Deuterium:
                 break
 
         # add an success indicator as virtual text
-        annotations = [(u'✔ ', 'DeuteriumSuccess') if result['success'] else
-                       (u'✘ ', 'DeuteriumFailure')]
+        annotations = [(vim.vars['deuterium#symbol_success'], 'DeuteriumSuccess')
+                       if result['success'] else
+                       (vim.vars['deuterium#symbol_failure'], 'DeuteriumFailure')]
 
         # if there is anything on stdout we add its first line to the virtual text
         if result['stdout'] != '':
-            annotations.append((result['stdout'].split('\n')[0], 'Comment'))
+            annotations.append((' ' + result['stdout'].split('\n')[0], 'DeuteriumText'))
 
         # clear the current virtual text first in order to get instant updates
         vim.call('nvim_buf_set_virtual_text', int(vim.current.buffer.number),

@@ -10,8 +10,16 @@ endif
 
 let g:deuterium#namespace = nvim_create_namespace('deuterium')
 
+if !exists('g:deuterium#symbol_success')
+    let g:deuterium#symbol_success = '✔'  " U+2714 heavy check mark
+endif
+if !exists('g:deuterium#symbol_failure')
+    let g:deuterium#symbol_failure = '✘'  " U+2718 heavy ballot x
+endif
+
 highlight default DeuteriumSuccess ctermfg=green
 highlight default DeuteriumFailure ctermfg=red
+highlight default link DeuteriumText Comment
 
 command! DeuteriumInit call deuterium#initialize()
 command! DeuteriumStart call deuterium#start()
