@@ -21,13 +21,22 @@ endfunction
 
 function! deuterium#start()
     let s:kernel_jobid = jobstart('ipython kernel')
-    echomsg '[deuterium] started ipython kernel @pid '.jobpid(s:kernel_jobid)
+    echomsg '[deuterium] kernel is booting up @pid '.jobpid(s:kernel_jobid)
+    " need to wait for kernel to properly boot
+    sleep 1
 endfunction
 
 
 function! deuterium#shutdown()
+    if !exists('s:kernel_jobid')
+        " no kernel registered
+        return
+    endif
     call nvim_buf_clear_namespace(0, nvim_create_namespace('deuterium'), 0, -1)
+    echomsg '[deuterium] kernel is shutting down'
     python3 Deuterium.shutdown()
+    " need to wait for kernel to clean up connection file
+    sleep 500m
 endfunction
 
 
@@ -35,8 +44,8 @@ function! deuterium#connect()
     if !exists('s:kernel_jobid')
         echomsg '[deuterium] no kernel registered. trying to start one now'
         call deuterium#start()
-        sleep 1
     endif
+    echomsg '[deuterium] connecting to kernel'
     python3 Deuterium.connect()
 endfunction
 

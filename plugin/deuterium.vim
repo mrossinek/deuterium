@@ -25,6 +25,6 @@ vnoremap <F13> :DeuteriumSend<CR>
 
 augroup Deuterium
     autocmd!
-    autocmd! VimEnter *.py DeuteriumConnect
-    autocmd! VimLeave *.py DeuteriumShutdown
+    autocmd VimEnter *.py DeuteriumConnect
+    autocmd VimLeavePre * DeuteriumShutdown
 augroup end

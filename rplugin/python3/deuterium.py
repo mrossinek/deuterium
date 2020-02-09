@@ -8,9 +8,11 @@ class Deuterium:
     """ Deuterium - to be used as a static class
 
     Attributes:
+        manager   the KernelManager instance
         client    an instance of the jupyter KernelClient class
         msg_id    the integer id of the last execute_request message send to the kernel
     """
+    manager = None
     client = None
     msg_id = None
 
@@ -25,11 +27,11 @@ class Deuterium:
 
         # setup kernel manager
         cfile = find_connection_file()
-        manager = KernelManager(connection_file=cfile)
-        manager.load_connection_file()
+        Deuterium.manager = KernelManager(connection_file=cfile)
+        Deuterium.manager.load_connection_file()
 
         # create client and connect
-        Deuterium.client = manager.client()
+        Deuterium.client = Deuterium.manager.client()
         Deuterium.client.start_channels()
 
         # ping kernel
@@ -43,7 +45,11 @@ class Deuterium:
     def shutdown():
         """ Shutdown the Kernel
         """
-        Deuterium.client.shutdown()
+        Deuterium.msg_id = Deuterium.manager.shutdown_kernel()
+        try:
+            Deuterium.client.get_shell_msg(timeout=1)
+        except Empty:
+            pass
         Deuterium.client.stop_channels()
 
     @staticmethod
