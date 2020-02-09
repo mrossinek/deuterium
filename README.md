@@ -31,9 +31,14 @@ Deuterium will automatically start an IPython in the background when you open a
 Python file.
 By default it sets up a number of commands to interact with.
 
-Furthermore, the `<F13>` key is bound to send the code under the cursor to the
+Furthermore, `<S-CR>` is bound to send the code under the cursor to the
 kernel for execution.
 This works for the current line in normal mode and for a visual selection, too.
+
+If you do not like the defaults, they are fully configurable so you can adapt
+them to your needs.
+For more information on this, be sure to check out the
+[documentation](./doc/deuterium.txt).
 
 
 ## Why the name "deuterium"?
