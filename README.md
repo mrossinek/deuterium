@@ -4,7 +4,8 @@
 **This is a WIP!**
 Currently only Neovim is supported!
 
-Deuterium is a vim-implementation of the popular hydrogen plugin for Atom.
+Deuterium is a vim-implementation of the popular [hydrogen plugin](https://atom.io/packages/hydrogen)
+for Atom.
 Thus, it connects you to an IPython kernel running in the background which
 allows in-line feedback on the execution of your Python code.
 
@@ -49,7 +50,6 @@ https://gitlab.com/mrossinek/vim-tmux-controller
 However, all of these approaches may be considered flawed in the sense that they
 simply `exec` or `eval` the code passed to them which is generally not a good
 idea.
-[//]: # (TODO find explanatory article to link here)
 
 Thus, the implementation of a proper message parsing protocol such as
 [Jupyter ones'](https://jupyter-client.readthedocs.io/en/stable/messaging.html)
