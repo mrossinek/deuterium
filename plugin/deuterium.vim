@@ -10,7 +10,6 @@ endif
 
 let g:deuterium#namespace = nvim_create_namespace('deuterium')
 
-" TODO allow suppressing all of the below
 highlight default DeuteriumSuccess ctermfg=green
 highlight default DeuteriumFailure ctermfg=red
 
@@ -20,8 +19,10 @@ command! DeuteriumShutdown call deuterium#shutdown()
 command! DeuteriumConnect call deuterium#connect()
 command! -range DeuteriumSend <line1>,<line2>call deuterium#send()
 
-nnoremap <F13> :DeuteriumSend<CR>
-vnoremap <F13> :DeuteriumSend<CR>
+if !hasmapto('<Plug>DeuteriumSend')
+    map <F13> <Plug>DeuteriumSend
+endif
+noremap <unique> <script> <Plug>DeuteriumSend :DeuteriumSend<CR>
 
 augroup Deuterium
     autocmd!
