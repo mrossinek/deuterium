@@ -1,8 +1,9 @@
-if exists('g:loaded_deuterium') || !has('pythonx') || !has('python3') || &compatible
+if (exists('g:deuterium#loaded') && g:deuterium#loaded isnot 0)
+            \ || !has('pythonx') || !has('python3') || &compatible
     finish
 endif
 
-let g:loaded_deuterium = 1
+let g:deuterium#loaded = 1
 
 if !deuterium#initialize()
     finish
@@ -21,19 +22,22 @@ highlight default DeuteriumSuccess ctermfg=green
 highlight default DeuteriumFailure ctermfg=red
 highlight default link DeuteriumText Comment
 
-command! DeuteriumInit call deuterium#initialize()
 command! DeuteriumStart call deuterium#start()
 command! DeuteriumShutdown call deuterium#shutdown()
 command! DeuteriumConnect call deuterium#connect()
 command! -range DeuteriumSend <line1>,<line2>call deuterium#send()
 
 if !hasmapto('<Plug>DeuteriumSend')
-    map <F13> <Plug>DeuteriumSend
+    map <S-CR> <Plug>DeuteriumSend
 endif
 noremap <unique> <script> <Plug>DeuteriumSend :DeuteriumSend<CR>
 
-augroup Deuterium
+augroup DeuteriumEnter
     autocmd!
     autocmd VimEnter *.py DeuteriumConnect
+augroup end
+
+augroup DeuteriumLeave
+    autocmd!
     autocmd VimLeavePre * DeuteriumShutdown
 augroup end

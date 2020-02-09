@@ -13,12 +13,107 @@ allows in-line feedback on the execution of your Python code.
 ==============================================================================
 USAGE                                            *deuterium-usage*
 
-TODO
+Deuterium will automatically start an IPython kernel and connect to it in the
+background whenever you open a Python file.
+If you want to change this behaviour please refer to |deuterium-autocommands|.
+
+You can execute any set of lines from your file with the |:DeuteriumSend|
+command.
+By default this command is mapped to |<S-CR>| (i.e. Shift+Enter).
+If you want to change this please refer to |deuterium-mappings|.
+
+Before exiting vim, deuterium will shut any registered kernel down.
+You may again configure this via the |deuterium-autocommands|.
+
+------------------------------------------------------------------------------
+COMMANDS                                         *deuterium-commands*
+
+*:DeuteriumStart*
+This command is used to start the an IPython kernel in the background. Due to
+some timing issues this command implies a delay of 1 second.
+It is run implicitely in the |DeuteriumEnter| autocommand.
+
+*:DeuteriumShutdown*
+This command is used to shutdown the registered kernel. In order to guarantee
+a clean shutdown where the connection file is properly removed this command
+has a delay of 0.5 seconds.
+It is run by default in the |DeuteriumLeave| autocommand.
+
+*:DeuteriumConnect*
+This command is used to connect to an existing IPython kernel.
+When no kernel has been started previously, |:DeuteriumStart| will be called
+automatically.
+This command is run by default in the |DeuteriumEnter| autocommand.
+
+*:DeuteriumSend*
+This command is used to send any code to the kernel for execution.
+It is most conveniently used through its hook at |<Plug>DeuteriumSend|.
 
 ==============================================================================
 CONFIGURATION                                    *deuterium-configuration*
 
-TODO
+Below is a list of the default settings in deuterium.
+They are sorted by category:
+  - |deuterium-settings|
+  - |deuterium-highlighting|
+  - |deuterium-mappings|
+  - |deuterium-autocommands|
+
+------------------------------------------------------------------------------
+SETTINGS                                         *deuterium-settings*
+
+*g:loaded_deuterium*                         `Default: 0`
+Set this boolean to anything but 0 to disable deuterium.
+
+*g:deuterium#symbol_success*                 `Default: ✔`
+This is the symbol used to indicate a successful command execution.
+In case you do not have unicode support: the default is U+2714; the heavy
+check mark.
+
+*g:deuterium#symbol_failure*                 `Default: ✘`
+This is the symbol used to indicate a failed command execution.
+In case you do not have unicode support: the default is U+2718; the heavy
+ballot X.
+
+------------------------------------------------------------------------------
+HIGHLIGHTING                                     *deuterium-highlighting*
+
+Deuterium uses three different highlighting groups.
+
+*DeuteriumSuccess*                           `Default: ctermfg=green`
+Which is only used for the |g:deuterium#symbol_success|.
+
+*DeuteriumFailure*                           `Default: ctermfg=red`
+Which is only used for the |g:deuterium#symbol_failure|.
+
+*DeuteriumText*                              `Default: links to Comment`
+Which is used for all other virtual text.
+
+------------------------------------------------------------------------------
+MAPPINGS                                         *deuterium-mappings*
+
+Deuterium provides a single mapping by default. Everything else is done via
+|deuterium-commands|.
+
+*<S-Cr>*
+*<S-CR>*                                     `Default: <Plug>DeuteriumSend`
+In order to overwrite this mapping you can simply provide a new map to
+*<Plug>DeuteriumSend* before loading the plugin.
+
+------------------------------------------------------------------------------
+AUTOCOMMANDS                                     *deuterium-autocommands*
+
+Two groups of autocommands are set up by deuterium.
+If you would like to disable any of them simply clear the augroup.
+
+*DeuteriumEnter*
+This group is used to automatically start and connect an ipython kernel: >
+    autocmd VimEnter *.py DeuteriumConnect
+<
+
+*DeuteriumLeave*
+This group is used to automatically shutdown the ipython kernel on leaving: >
+    autocmd VimLeavePre * DeuteriumShutdown
 
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:
