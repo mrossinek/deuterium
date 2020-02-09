@@ -22,6 +22,8 @@ allows in-line feedback on the execution of your Python code.
 
 ## Installation
 Install deuterium with your favorite plugin manager.
+Furtermore, this plugin requires the `ipykernel` python package.
+You can simply install it with pip: `pip install ipykernel`
 
 
 ## Usage
