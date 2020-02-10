@@ -22,8 +22,15 @@ allows in-line feedback on the execution of your Python code.
 
 ## Installation
 Install deuterium with your favorite plugin manager.
-Furtermore, this plugin requires the `ipykernel` python package.
-You can simply install it with pip: `pip install ipykernel`
+Furtermore, this plugin requires the `ipykernel` and `jupyter_client` python
+packages.
+You can simply install them with pip: `pip install ipykernel jupyter_client`
+
+If you have configured vim with a hard-coded python interpreter as explained at
+`:h python-virtualenv` it suffices to install these two packages in said
+virtualenv.
+Deuterium will automatically start the background kernel using the active
+virtualenv in the folder where you started vim.
 
 
 ## Usage
