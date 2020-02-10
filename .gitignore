@@ -1,6 +1,10 @@
 .envrc
 .direnv/
+.lvimrc
 
 tags
+
+/test*py
+/tmp*py
 
 __pycache__/
