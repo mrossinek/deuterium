@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - trigger `+` at the end of `DeuteriumSend` (37297755)
 - clear virtual text on all lines that are executed (8b87886e)
 
+
 ## [0.0.1] - 2020-02-10
 
 ### Added
