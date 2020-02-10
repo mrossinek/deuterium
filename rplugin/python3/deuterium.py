@@ -97,8 +97,9 @@ class Deuterium:
             annotations.append((' ' + result['stdout'].split('\n')[0], 'DeuteriumText'))
 
         # clear the current virtual text first in order to get instant updates
-        vim.call('nvim_buf_set_virtual_text', int(vim.current.buffer.number),
-                 vim.vars['deuterium#namespace'], end, [], {})
+        for line in range(start, end+1):
+            vim.call('nvim_buf_set_virtual_text', int(vim.current.buffer.number),
+                     vim.vars['deuterium#namespace'], line, [], {})
         vim.call('nvim_buf_set_virtual_text', int(vim.current.buffer.number),
                  vim.vars['deuterium#namespace'], end, annotations, {})
 
