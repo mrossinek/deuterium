@@ -75,6 +75,10 @@ This is the symbol used to indicate a failed command execution.
 In case you do not have unicode support: the default is U+2718; the heavy
 ballot X.
 
+*g:deuterium#jump_line_after_send*           `Default: 1`
+By default deuterium will trigger |+| after a command was send.
+You can disable this by setting this option to 0.
+
 ------------------------------------------------------------------------------
 HIGHLIGHTING                                     *deuterium-highlighting*
 

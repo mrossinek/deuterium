@@ -56,4 +56,7 @@ function! deuterium#send() range
         return 1
     endif
     python3 Deuterium.send()
+    if g:deuterium#jump_line_after_send
+        normal +
+    endif
 endfunction

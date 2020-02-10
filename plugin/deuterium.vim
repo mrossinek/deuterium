@@ -17,6 +17,9 @@ endif
 if !exists('g:deuterium#symbol_failure')
     let g:deuterium#symbol_failure = '✘'  " U+2718 heavy ballot x
 endif
+if !exists('g:deuterium#jump_line_after_send')
+    let g:deuterium#jump_line_after_send = 1
+endif
 
 highlight default DeuteriumSuccess ctermfg=green
 highlight default DeuteriumFailure ctermfg=red
