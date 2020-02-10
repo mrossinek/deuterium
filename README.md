@@ -16,6 +16,8 @@ allows in-line feedback on the execution of your Python code.
 
 ### Future Ideas
 - utilize popup or preview window for longer outputs
+- automatically select block of code based on indentation level (in normal mode)
+- allow count to specify indent levels to be removed before sending code
 - preview media output (such as images)
 - allow setting break points
 
