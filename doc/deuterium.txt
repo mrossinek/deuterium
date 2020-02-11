@@ -17,7 +17,7 @@ Deuterium will automatically start an IPython kernel and connect to it in the
 background whenever you open a Python file.
 If you want to change this behaviour please refer to |deuterium-autocommands|.
 
-You can execute any set of lines from your file with the |:DeuteriumSend|
+You can execute any set of lines from your file with the |:DeuteriumExecute|
 command.
 By default this command is mapped to |<S-CR>| (i.e. Shift+Enter).
 If you want to change this please refer to |deuterium-mappings|.
@@ -45,9 +45,9 @@ When no kernel has been started previously, |:DeuteriumStart| will be called
 automatically.
 This command is run by default in the |DeuteriumEnter| autocommand.
 
-*:DeuteriumSend*
-This command is used to send any code to the kernel for execution.
-It is most conveniently used through its hook at |<Plug>DeuteriumSend|.
+*:DeuteriumExecute*
+This command is used to execute any code in the kernel.
+It is most conveniently used through its hook at |<Plug>DeuteriumExecute|.
 
 ==============================================================================
 CONFIGURATION                                    *deuterium-configuration*
@@ -75,8 +75,8 @@ This is the symbol used to indicate a failed command execution.
 In case you do not have unicode support: the default is U+2718; the heavy
 ballot X.
 
-*g:deuterium#jump_line_after_send*           `Default: 1`
-By default deuterium will trigger |+| after a command was send.
+*g:deuterium#jump_line_after_execute*        `Default: 1`
+By default deuterium will trigger |+| after a command was executed.
 You can disable this by setting this option to 0.
 
 ------------------------------------------------------------------------------
@@ -100,9 +100,9 @@ Deuterium provides a single mapping by default. Everything else is done via
 |deuterium-commands|.
 
 *<S-Cr>*
-*<S-CR>*                                     `Default: <Plug>DeuteriumSend`
+*<S-CR>*                                     `Default: <Plug>DeuteriumExecute`
 In order to overwrite this mapping you can simply provide a new map to
-*<Plug>DeuteriumSend* before loading the plugin.
+*<Plug>DeuteriumExecute* before loading the plugin.
 
 ------------------------------------------------------------------------------
 AUTOCOMMANDS                                     *deuterium-autocommands*

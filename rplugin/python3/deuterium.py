@@ -58,14 +58,9 @@ class Deuterium:
 
         The code send is automatically grabbed from the current selection in vim.
         """
-        result = {}
-        # shift line numbers to match Python's zero-indexing
-        start = int(vim.eval("a:firstline")) - 1
-        end = int(vim.eval("a:lastline")) - 1
-        code = '\n'.join(vim.current.buffer[start:end+1])
-        if code == '':
-            return
+        code = vim.eval("a:code")
         Deuterium.msg_id = Deuterium.client.execute(code)
+        result = {}
         # wait for answer on shell channel
         while True:
             try:
@@ -88,20 +83,15 @@ class Deuterium:
                 break
 
         # add an success indicator as virtual text
-        annotations = [(vim.vars['deuterium#symbol_success'], 'DeuteriumSuccess')
+        virtualtext = [[vim.vars['deuterium#symbol_success'], 'DeuteriumSuccess']
                        if result['success'] else
-                       (vim.vars['deuterium#symbol_failure'], 'DeuteriumFailure')]
+                       [vim.vars['deuterium#symbol_failure'], 'DeuteriumFailure']]
 
         # if there is anything on stdout we add its first line to the virtual text
         if result['stdout'] != '':
-            annotations.append((' ' + result['stdout'].split('\n')[0], 'DeuteriumText'))
+            virtualtext.append([' ' + result['stdout'].split('\n')[0], 'DeuteriumText'])
 
-        # clear the current virtual text first in order to get instant updates
-        for line in range(start, end+1):
-            vim.call('nvim_buf_set_virtual_text', int(vim.current.buffer.number),
-                     vim.vars['deuterium#namespace'], line, [], {})
-        vim.call('nvim_buf_set_virtual_text', int(vim.current.buffer.number),
-                 vim.vars['deuterium#namespace'], end, annotations, {})
+        vim.command("let virtualtext = %s"% virtualtext)
 
         # TODO handle stderr output
         # TODO utilize popup or preview window for longer outputs

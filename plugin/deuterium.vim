@@ -17,8 +17,8 @@ endif
 if !exists('g:deuterium#symbol_failure')
     let g:deuterium#symbol_failure = '✘'  " U+2718 heavy ballot x
 endif
-if !exists('g:deuterium#jump_line_after_send')
-    let g:deuterium#jump_line_after_send = 1
+if !exists('g:deuterium#jump_line_after_execute')
+    let g:deuterium#jump_line_after_execute = 1
 endif
 
 highlight default DeuteriumSuccess ctermfg=green
@@ -28,12 +28,12 @@ highlight default link DeuteriumText Comment
 command! DeuteriumStart call deuterium#start()
 command! DeuteriumShutdown call deuterium#shutdown()
 command! DeuteriumConnect call deuterium#connect()
-command! -range DeuteriumSend <line1>,<line2>call deuterium#send()
+command! -range DeuteriumExecute <line1>,<line2>call deuterium#execute()
 
-if !hasmapto('<Plug>DeuteriumSend')
-    map <S-CR> <Plug>DeuteriumSend
+if !hasmapto('<Plug>DeuteriumExecute')
+    map <S-CR> <Plug>DeuteriumExecute
 endif
-noremap <unique> <script> <Plug>DeuteriumSend :DeuteriumSend<CR>
+noremap <unique> <script> <silent> <Plug>DeuteriumExecute :DeuteriumExecute<CR>
 
 augroup DeuteriumEnter
     autocmd!

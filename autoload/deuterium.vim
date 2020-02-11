@@ -50,13 +50,28 @@ function! deuterium#connect()
 endfunction
 
 
-function! deuterium#send() range
+function! deuterium#execute() range
     if !exists('s:kernel_jobid')
         echoerr '[deuterium] please connect to a kernel first!'
         return 1
     endif
-    python3 Deuterium.send()
-    if g:deuterium#jump_line_after_send
+    let code = ''
+    for line in range(a:firstline, a:lastline)
+        let code .= getline(line) . "\n"
+        call nvim_buf_set_virtual_text(0, g:deuterium#namespace, line-1, [], {})
+    endfor
+    let virtualtext = deuterium#send(code)
+    call nvim_buf_set_virtual_text(0, g:deuterium#namespace, a:lastline-1, virtualtext, {})
+    if g:deuterium#jump_line_after_execute
         normal +
     endif
+endfunction
+
+
+function! deuterium#send(code)
+    if a:code ==# ''
+        return
+    endif
+    python3 Deuterium.send()
+    return virtualtext
 endfunction
