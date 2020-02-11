@@ -10,8 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ensure cleaner shutdown through use of KernelManager (81240935)
 - improve user configurability
 - add vim documentation
-- trigger `+` at the end of `DeuteriumSend` (37297755)
+- trigger `+` at the end of `DeuteriumExecute` (37297755)
 - clear virtual text on all lines that are executed (8b87886e)
+
+### Changed
+- split `DeuteriumSend` into an execute and internal send function (d248dbd)
+- the above renames all `send`-related names (visible to the user) to `execute`
 
 
 ## [0.0.1] - 2020-02-10
