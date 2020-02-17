@@ -69,8 +69,8 @@ endfunction
 
 
 function! deuterium#send(code)
-    if a:code ==# ''
-        return
+    if match(a:code, '^[\s\r\n]*$') ==? 0
+        return []
     endif
     python3 Deuterium.send()
     return virtualtext
