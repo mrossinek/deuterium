@@ -85,16 +85,7 @@ function! deuterium#execute() range
                 let virtualtext += [[' ' . substitute(stdout, '\n', '', 'g'), 'DeuteriumText']]
             else
                 " long outputs are printed in popup window
-                let parsed = split(stdout, '\n')
-                let popup_buf = nvim_create_buf(v:false, v:true)
-                call nvim_buf_set_lines(popup_buf, 0, -1, v:true, parsed)
-                " configure popup window
-                let height = len(parsed)
-                let width = max(map(parsed, {_, s -> len(s)}))
-                let config = {'relative': 'cursor', 'width': width+width/2, 'height': height,
-                            \ 'row': 0, 'col': len(getline('.'))+3, 'style': 'minimal'}
-                let s:deuterium_popup_win = nvim_open_win(popup_buf, v:false, config)
-                call nvim_win_set_option(s:deuterium_popup_win, 'winhl', 'NormalFloat:DeuteriumText')
+                call deuterium#popup(stdout)
             endif
         endif
 
@@ -105,21 +96,7 @@ function! deuterium#execute() range
                 let virtualtext += [[' ' . substitute(stderr, '\n', '', 'g'), 'Error']]
             else
                 " tracebacks are printed in preview window
-                let parsed = split(stderr, '\n')
-                let preview_buf = nvim_create_buf(v:false, v:true)
-                call nvim_buf_set_lines(preview_buf, 0, -1, v:true, parsed)
-                try
-                    " try reaching preview window
-                    normal P
-                catch /^Vim\%((\a\+)\)\=:E441/
-                    " if failed, open a new one
-                    10split +setlocal\ previewwindow
-                finally
-                    " open current buffer
-                    let s:deuterium_popup_win = nvim_get_current_win()
-                    call nvim_set_current_buf(preview_buf)
-                    normal p
-                endtry
+                call deuterium#preview(stderr)
             endif
         endif
 
@@ -133,6 +110,39 @@ function! deuterium#execute() range
         if g:deuterium#jump_line_after_execute
             normal +
         endif
+    endtry
+endfunction
+
+
+function! deuterium#popup(text)
+    let parsed = split(a:text, '\n')
+    let popup_buf = nvim_create_buf(v:false, v:true)
+    call nvim_buf_set_lines(popup_buf, 0, -1, v:true, parsed)
+    " configure popup window
+    let height = len(parsed)
+    let width = max(map(parsed, {_, s -> len(s)}))
+    let config = {'relative': 'cursor', 'width': width+width/2, 'height': height,
+                \ 'row': 0, 'col': len(getline('.'))+3, 'style': 'minimal'}
+    let s:deuterium_popup_win = nvim_open_win(popup_buf, v:false, config)
+    call nvim_win_set_option(s:deuterium_popup_win, 'winhl', 'NormalFloat:DeuteriumText')
+endfunction
+
+
+function! deuterium#preview(text)
+    let parsed = split(a:text, '\n')
+    let preview_buf = nvim_create_buf(v:false, v:true)
+    call nvim_buf_set_lines(preview_buf, 0, -1, v:true, parsed)
+    try
+        " try reaching preview window
+        normal P
+    catch /^Vim\%((\a\+)\)\=:E441/
+        " if failed, open a new one
+        10split +setlocal\ previewwindow
+    finally
+        " open current buffer
+        let s:deuterium_popup_win = nvim_get_current_win()
+        call nvim_set_current_buf(preview_buf)
+        normal p
     endtry
 endfunction
 
