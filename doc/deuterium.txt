@@ -79,6 +79,16 @@ ballot X.
 By default deuterium will trigger |+| after a command was executed.
 You can disable this by setting this option to 0.
 
+*g:deuterium#stdout_handler*                 `Default: popup`
+Can be one of `popup` (default), `preview` or `none`.
+Specifies the method used to present outputs on the stdout stream in case
+there is more than a single line.
+
+*g:deuterium#stderr_handler*                 `Default: preview`
+Can be one of `preview` (default), `popup` or `none`.
+Specifies the method used to present outputs on the stderr stream in case
+there is more than a single line.
+
 ------------------------------------------------------------------------------
 HIGHLIGHTING                                     *deuterium-highlighting*
 
@@ -91,7 +101,10 @@ Which is only used for the |g:deuterium#symbol_success|.
 Which is only used for the |g:deuterium#symbol_failure|.
 
 *DeuteriumText*                              `Default: links to Comment`
-Which is used for all other virtual text.
+Which is used for normal output in virtual text.
+
+*DeuteriumError*                             `Default: links to Error`
+Which is used for error output in virtual text.
 
 ------------------------------------------------------------------------------
 MAPPINGS                                         *deuterium-mappings*

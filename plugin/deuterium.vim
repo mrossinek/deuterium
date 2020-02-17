@@ -20,10 +20,17 @@ endif
 if !exists('g:deuterium#jump_line_after_execute')
     let g:deuterium#jump_line_after_execute = 1
 endif
+if !exists('g:deuterium#stdout_handler')
+    let g:deuterium#stdout_handler = 'popup'
+endif
+if !exists('g:deuterium#stderr_handler')
+    let g:deuterium#stderr_handler = 'preview'
+endif
 
 highlight default DeuteriumSuccess ctermfg=green
 highlight default DeuteriumFailure ctermfg=red
 highlight default link DeuteriumText Comment
+highlight default link DeuteriumError Error
 
 command! DeuteriumStart call deuterium#start()
 command! DeuteriumShutdown call deuterium#shutdown()

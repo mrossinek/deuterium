@@ -78,27 +78,28 @@ function! deuterium#execute() range
         " set success indicator label
         let virtualtext = [[symbol, hi_group]]
 
-        " process stdout
-        if stdout !=# ''
-            if len(split(stdout, '\n')) <=# 1
+        " process streams
+        for [stream, hi_group] in [['stdout', 'DeuteriumText'], ['stderr', 'DeuteriumError']]
+            let text = get(l:, stream)
+            if text ==# ''
+                continue
+            endif
+            if len(split(text, '\n')) <=# 1
                 " short outputs are added to virtual text
-                let virtualtext += [[' ' . substitute(stdout, '\n', '', 'g'), 'DeuteriumText']]
+                let virtualtext += [[' ' . substitute(text, '\n', '', 'g'), hi_group]]
             else
-                " long outputs are printed in popup window
-                call deuterium#popup(stdout)
+                let handler = get(g:, 'deuterium#' . stream . '_handler')
+                if handler ==? 'none'
+                    continue
+                elseif handler ==? 'popup'
+                    call deuterium#popup(text)
+                elseif handler ==? 'preview'
+                    call deuterium#preview(text)
+                else
+                    throw 'Invalid Option for g:deuterium#' . stream . '_handler'
+                endif
             endif
-        endif
-
-        " process stderr
-        if stderr !=# ''
-            if len(split(stderr, '\n')) <=# 1
-                " simple error message added to virtual text
-                let virtualtext += [[' ' . substitute(stderr, '\n', '', 'g'), 'Error']]
-            else
-                " tracebacks are printed in preview window
-                call deuterium#preview(stderr)
-            endif
-        endif
+        endfor
 
         " add virtual text to last executed line
         call nvim_buf_set_virtual_text(0, g:deuterium#namespace, a:lastline-1, virtualtext, {})
