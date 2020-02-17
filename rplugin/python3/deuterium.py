@@ -1,5 +1,6 @@
 """ Deuterium """
 
+import re
 from queue import Empty
 import vim  # pylint: disable=import-error
 
@@ -60,7 +61,9 @@ class Deuterium:
         """
         code = vim.eval("a:code")
         Deuterium.msg_id = Deuterium.client.execute(code)
-        result = {}
+        success = False
+        stdout = ''
+        stderr = ''
         # wait for answer on shell channel
         while True:
             try:
@@ -70,31 +73,23 @@ class Deuterium:
             if msg['parent_header']['msg_id'] == Deuterium.msg_id \
                     and msg['msg_type'] == 'execute_reply':
                 if msg['content']['status'] == 'ok':
-                    result['success'] = True
+                    success = True
                     # if the command ran successfully, check for any output on the stream channels
                     msgs = Deuterium.read_streams()
-                    for stream in ('stdout', 'stderr'):
-                        result[stream] = '\n'.join([m['text'] for m in msgs if m['name'] == stream])
+                    stdout = '\n'.join([m['text'] for m in msgs if m['name'] == 'stdout'])
+                    stderr = '\n'.join([m['text'] for m in msgs if m['name'] == 'stderr'])
                 else:
                     # otherwise we gather some information on the error
-                    result['success'] = False
-                    result['stdout'] = msg['content']['ename'] + ': ' + msg['content']['evalue']
-                    result['stderr'] = msg['content'].get('traceback', '')
+                    success = False
+                    stdout = msg['content']['ename'] + ': ' + msg['content']['evalue']
+                    stderr = '\n'.join(msg['content'].get('traceback', ''))
+                    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+                    stderr = ansi_escape.sub('', stderr)
                 break
 
-        # add an success indicator as virtual text
-        virtualtext = [[vim.vars['deuterium#symbol_success'], 'DeuteriumSuccess']
-                       if result['success'] else
-                       [vim.vars['deuterium#symbol_failure'], 'DeuteriumFailure']]
-
-        # if there is anything on stdout we add its first line to the virtual text
-        if result['stdout'] != '':
-            virtualtext.append([' ' + result['stdout'].split('\n')[0], 'DeuteriumText'])
-
-        vim.command("let virtualtext = %s"% virtualtext)
-
-        # TODO handle stderr output
-        # TODO utilize popup or preview window for longer outputs
+        vim.command('let success = %s' % int(success))
+        vim.command('let stdout = "%s"' % stdout)
+        vim.command('let stderr = "%s"' % stderr)
 
     @staticmethod
     def read_streams():
