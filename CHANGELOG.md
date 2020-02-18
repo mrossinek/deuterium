@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - split `DeuteriumSend` into an execute and internal send function (d248dbd)
 - the above renames all `send`-related names (visible to the user) to `execute`
+- longer outputs on stdout and stderr streams can be handled in either popup or
+    preview windows (configured via `handler` settings) (!1)
 
 
 ## [0.0.1] - 2020-02-10

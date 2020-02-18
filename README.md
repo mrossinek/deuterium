@@ -13,11 +13,10 @@ allows in-line feedback on the execution of your Python code.
 ## Features
 - In-line feedback of successful execution
 - In-line preview of output (or error information in case of failure)
+- utilizes popup or preview windows for longer outputs
 
 ### Future Ideas
-- utilize popup or preview window for longer outputs (#1)
-- automatically select block of code based on indentation level (in normal mode) (#2)
-- allow count to specify indent levels to be removed before sending code (#3)
+- automatically select block of code based on indentation level (in normal mode) (#7)
 - preview media output (such as images) (#4)
 - allow setting break points (#5)
 
