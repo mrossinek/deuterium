@@ -17,7 +17,7 @@ EOF
 
     " initialize script variables
     let s:deuterium_namespace = nvim_create_namespace('deuterium')
-    let s:deuterium_popup_win = -1
+    let s:deuterium_extmarks = {}
     " return success code
     return get(g:, 'deuterium#init_success', 0)
 endfunction
@@ -36,12 +36,18 @@ function! deuterium#shutdown()
         " no kernel registered
         return
     endif
+    " close remaining popup windows
+    for [extmark, winid] in items(s:deuterium_extmarks)
+        call nvim_win_close(winid, v:false)
+        call remove(s:deuterium_extmarks, extmark)
+    endfor
     " clear namespace
     call nvim_buf_clear_namespace(0, s:deuterium_namespace, 0, -1)
     echomsg '[deuterium] kernel is shutting down'
     python3 Deuterium.shutdown()
     " need to wait for kernel to clean up connection file
     sleep 500m
+    unlet s:kernel_jobid
 endfunction
 
 
@@ -72,14 +78,25 @@ function! deuterium#execute() range
         call nvim_buf_set_virtual_text(0, s:deuterium_namespace, line-1, [], {})
     endfor
     let popup_row = a:lastline - 1
+    " close any popups in the region
+    " TODO extend search region for marks by max popup height in both directions
+    let local_extmarks = nvim_buf_get_extmarks(0, s:deuterium_namespace,
+                \ [a:firstline-1,0], [a:lastline-1,0], {})
+    for [extmark, _, _] in local_extmarks
+        let index = index(keys(s:deuterium_extmarks), string(extmark))
+        if index >=# 0
+            call nvim_win_close(s:deuterium_extmarks[string(extmark)], v:false)
+            call remove(s:deuterium_extmarks, extmark)
+        endif
+    endfor
     try
         let [success, stdout, stderr] = deuterium#send(code)
 
         " if we got this far this means some code was executed
-        " in that case close any open popup or preview window
-        if s:deuterium_popup_win ># 0
-            call nvim_win_close(s:deuterium_popup_win, v:false)
-            let s:deuterium_popup_win = -1
+        " in that case: if any handler is using the preview window, close it
+        if (g:deuterium#stdout_handler ==? 'preview' ||
+                    \ g:deuterium#stderr_handler ==? 'preview')
+            pclose
         endif
 
         let varname = success ? 'success' : 'failure'
@@ -117,8 +134,9 @@ function! deuterium#execute() range
         endfor
 
         " add virtual text to last executed line
-        call nvim_buf_set_virtual_text(0, s:deuterium_namespace, a:lastline-1,
-                    \ virtualtext, {})
+        call nvim_buf_set_virtual_text(0, s:deuterium_namespace,
+                    \ popup_row, virtualtext, {})
+
     catch /EmptyCode/
         " no code to execute
         return
@@ -152,9 +170,12 @@ function! deuterium#popup(text, bufpos)
                 \ 'col': 3,
                 \ 'style': 'minimal',
                 \ }
-    let s:deuterium_popup_win = nvim_open_win(popup_buf, v:false, config)
-    call nvim_win_set_option(s:deuterium_popup_win, 'winhl',
-                \ 'NormalFloat:DeuteriumText')
+    let popup_win = nvim_open_win(popup_buf, v:false, config)
+    call nvim_win_set_option(popup_win, 'winhl', 'NormalFloat:DeuteriumText')
+    " store popup window id associated with an extmark
+    let ns_id = nvim_buf_set_extmark(0, s:deuterium_namespace, 0,
+                \ a:bufpos[0], 0, {})
+    let s:deuterium_extmarks[ns_id] = popup_win
 endfunction
 
 
@@ -170,7 +191,6 @@ function! deuterium#preview(text)
         10split +setlocal\ previewwindow
     finally
         " open current buffer
-        let s:deuterium_popup_win = nvim_get_current_win()
         call nvim_set_current_buf(preview_buf)
         normal p
     endtry
