@@ -9,8 +9,7 @@ if !deuterium#initialize()
     finish
 endif
 
-let g:deuterium#namespace = nvim_create_namespace('deuterium')
-
+" set default global options
 if !exists('g:deuterium#symbol_success')
     let g:deuterium#symbol_success = '✔'  " U+2714 heavy check mark
 endif
@@ -20,21 +19,35 @@ endif
 if !exists('g:deuterium#jump_line_after_execute')
     let g:deuterium#jump_line_after_execute = 1
 endif
+if !exists('g:deuterium#stdout_handler')
+    let g:deuterium#stdout_handler = 'popup'
+endif
+if !exists('g:deuterium#stderr_handler')
+    let g:deuterium#stderr_handler = 'preview'
+endif
+if !exists('g:deuterium#max_popup_height')
+    let g:deuterium#max_popup_height = 10
+endif
 
+" set default highlighting groups
 highlight default DeuteriumSuccess ctermfg=green
 highlight default DeuteriumFailure ctermfg=red
 highlight default link DeuteriumText Comment
+highlight default link DeuteriumError Error
 
+" provide commands
 command! DeuteriumStart call deuterium#start()
 command! DeuteriumShutdown call deuterium#shutdown()
 command! DeuteriumConnect call deuterium#connect()
 command! -range DeuteriumExecute <line1>,<line2>call deuterium#execute()
 
+" set default mapping
 if !hasmapto('<Plug>DeuteriumExecute')
     map <S-CR> <Plug>DeuteriumExecute
 endif
 noremap <unique> <script> <silent> <Plug>DeuteriumExecute :DeuteriumExecute<CR>
 
+" set default autocommands
 augroup DeuteriumEnter
     autocmd!
     autocmd VimEnter *.py DeuteriumConnect
