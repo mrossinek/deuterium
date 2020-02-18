@@ -14,6 +14,10 @@ except Exception:
 else:
     vim.vars['deuterium#init_success'] = 1
 EOF
+
+    " initialize script variables
+    let s:deuterium_namespace = nvim_create_namespace('deuterium')
+    let s:deuterium_popup_win = -1
     " return success code
     return get(g:, 'deuterium#init_success', 0)
 endfunction
@@ -32,7 +36,8 @@ function! deuterium#shutdown()
         " no kernel registered
         return
     endif
-    call nvim_buf_clear_namespace(0, nvim_create_namespace('deuterium'), 0, -1)
+    " clear namespace
+    call nvim_buf_clear_namespace(0, s:deuterium_namespace, 0, -1)
     echomsg '[deuterium] kernel is shutting down'
     python3 Deuterium.shutdown()
     " need to wait for kernel to clean up connection file
@@ -47,7 +52,6 @@ function! deuterium#connect()
     endif
     echomsg '[deuterium] connecting to kernel'
     python3 Deuterium.connect()
-    let s:deuterium_popup_win = -1
 endfunction
 
 
@@ -57,10 +61,11 @@ function! deuterium#execute() range
         return 1
     endif
     let code = ''
+    " gather code which is to be executed
     for line in range(a:firstline, a:lastline)
         let code .= getline(line) . "\n"
         " remove any virtualtext in executed lines
-        call nvim_buf_set_virtual_text(0, g:deuterium#namespace, line-1, [], {})
+        call nvim_buf_set_virtual_text(0, s:deuterium_namespace, line-1, [], {})
     endfor
     try
         let [success, stdout, stderr] = deuterium#send(code)
@@ -79,15 +84,20 @@ function! deuterium#execute() range
         let virtualtext = [[symbol, hi_group]]
 
         " process streams
-        for [stream, hi_group] in [['stdout', 'DeuteriumText'], ['stderr', 'DeuteriumError']]
+        for [stream, hi_group] in [
+                    \ ['stdout', 'DeuteriumText'],
+                    \ ['stderr', 'DeuteriumError']]
             let text = get(l:, stream)
             if text ==# ''
                 continue
             endif
-            if len(split(text, '\n')) <=# 1
+            if len(split(text, '\n')) ==# 1
                 " short outputs are added to virtual text
-                let virtualtext += [[' ' . substitute(text, '\n', '', 'g'), hi_group]]
+                let virtualtext += [
+                            \ [' ' . substitute(text, '\n', '', 'g'), hi_group]
+                            \ ]
             else
+                " obtain configuration value on how to handle current stream
                 let handler = get(g:, 'deuterium#' . stream . '_handler')
                 if handler ==? 'none'
                     continue
@@ -96,13 +106,14 @@ function! deuterium#execute() range
                 elseif handler ==? 'preview'
                     call deuterium#preview(text)
                 else
-                    throw 'Invalid Option for g:deuterium#' . stream . '_handler'
+                    throw 'Invalid option for g:deuterium#'.stream.'_handler'
                 endif
             endif
         endfor
 
         " add virtual text to last executed line
-        call nvim_buf_set_virtual_text(0, g:deuterium#namespace, a:lastline-1, virtualtext, {})
+        call nvim_buf_set_virtual_text(0, s:deuterium_namespace, a:lastline-1,
+                    \ virtualtext, {})
     catch /EmptyCode/
         " no code to execute
         return
@@ -122,10 +133,17 @@ function! deuterium#popup(text)
     " configure popup window
     let height = len(parsed)
     let width = max(map(parsed, {_, s -> len(s)}))
-    let config = {'relative': 'cursor', 'width': width+width/2, 'height': height,
-                \ 'row': 0, 'col': len(getline('.'))+3, 'style': 'minimal'}
+    let config = {
+                \ 'relative': 'cursor',
+                \ 'width': width+width/2,
+                \ 'height': height,
+                \ 'row': 0,
+                \ 'col': len(getline('.'))+3,
+                \ 'style': 'minimal',
+                \ }
     let s:deuterium_popup_win = nvim_open_win(popup_buf, v:false, config)
-    call nvim_win_set_option(s:deuterium_popup_win, 'winhl', 'NormalFloat:DeuteriumText')
+    call nvim_win_set_option(s:deuterium_popup_win, 'winhl',
+                \ 'NormalFloat:DeuteriumText')
 endfunction
 
 
@@ -153,5 +171,6 @@ function! deuterium#send(code)
         throw 'EmptyCode'
     endif
     python3 Deuterium.send()
+    " return values are set inside python function
     return [success, stdout, stderr]
 endfunction
