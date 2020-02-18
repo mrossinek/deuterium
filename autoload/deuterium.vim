@@ -61,12 +61,17 @@ function! deuterium#execute() range
         return 1
     endif
     let code = ''
+    let popup_col = 0
     " gather code which is to be executed
     for line in range(a:firstline, a:lastline)
-        let code .= getline(line) . "\n"
+        let text = getline(line)
+        let code .= text . "\n"
+        " update popup_col position
+        let popup_col = max([len(text), popup_col])
         " remove any virtualtext in executed lines
         call nvim_buf_set_virtual_text(0, s:deuterium_namespace, line-1, [], {})
     endfor
+    let popup_row = a:lastline - 1
     try
         let [success, stdout, stderr] = deuterium#send(code)
 
@@ -102,7 +107,7 @@ function! deuterium#execute() range
                 if handler ==? 'none'
                     continue
                 elseif handler ==? 'popup'
-                    call deuterium#popup(text)
+                    call deuterium#popup(text, [popup_row, popup_col])
                 elseif handler ==? 'preview'
                     call deuterium#preview(text)
                 else
@@ -126,19 +131,25 @@ function! deuterium#execute() range
 endfunction
 
 
-function! deuterium#popup(text)
+function! deuterium#popup(text, bufpos)
     let parsed = split(a:text, '\n')
     let popup_buf = nvim_create_buf(v:false, v:true)
     call nvim_buf_set_lines(popup_buf, 0, -1, v:true, parsed)
     " configure popup window
+    " TODO limit popup height
     let height = len(parsed)
-    let width = max(map(parsed, {_, s -> len(s)}))
+    let width = nvim_win_get_width(0)
+    let width -= ((&l:number || &l:relativenumber) ? &l:numberwidth : 0)
+    let width -= &l:foldcolumn
+    let width -= ((&l:signcolumn) ? 2 : 0)
+    let width -= a:bufpos[1] + 5
     let config = {
-                \ 'relative': 'cursor',
-                \ 'width': width+width/2,
+                \ 'relative': 'win',
+                \ 'width': width,
                 \ 'height': height,
+                \ 'bufpos': a:bufpos,
                 \ 'row': 0,
-                \ 'col': len(getline('.'))+3,
+                \ 'col': 3,
                 \ 'style': 'minimal',
                 \ }
     let s:deuterium_popup_win = nvim_open_win(popup_buf, v:false, config)
