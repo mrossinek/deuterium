@@ -89,6 +89,10 @@ Can be one of `preview` (default), `popup` or `none`.
 Specifies the method used to present outputs on the stderr stream in case
 there is more than a single line.
 
+*g:deuterium#max_popup_height*               `Default: 10`
+The maximum height a popup window can take. This value is also used to search
+up- and downwards for any popups to be closed when a nearby line is executed.
+
 ------------------------------------------------------------------------------
 HIGHLIGHTING                                     *deuterium-highlighting*
 

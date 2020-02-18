@@ -79,9 +79,10 @@ function! deuterium#execute() range
     endfor
     let popup_row = a:lastline - 1
     " close any popups in the region
-    " TODO extend search region for marks by max popup height in both directions
     let local_extmarks = nvim_buf_get_extmarks(0, s:deuterium_namespace,
-                \ [a:firstline-1,0], [a:lastline-1,0], {})
+                \ [max([a:firstline - 1 - g:deuterium#max_popup_height, line('w0')]), 0],
+                \ [min([a:lastline + 1 - g:deuterium#max_popup_height, line('w$')]), 0],
+                \ {})
     for [extmark, _, _] in local_extmarks
         let index = index(keys(s:deuterium_extmarks), string(extmark))
         if index >=# 0
@@ -154,8 +155,7 @@ function! deuterium#popup(text, bufpos)
     let popup_buf = nvim_create_buf(v:false, v:true)
     call nvim_buf_set_lines(popup_buf, 0, -1, v:true, parsed)
     " configure popup window
-    " TODO limit popup height
-    let height = len(parsed)
+    let height = max([len(parsed), g:deuterium#max_popup_height])
     let width = nvim_win_get_width(0)
     let width -= ((&l:number || &l:relativenumber) ? &l:numberwidth : 0)
     let width -= &l:foldcolumn

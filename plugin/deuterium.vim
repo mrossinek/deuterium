@@ -25,6 +25,9 @@ endif
 if !exists('g:deuterium#stderr_handler')
     let g:deuterium#stderr_handler = 'preview'
 endif
+if !exists('g:deuterium#max_popup_height')
+    let g:deuterium#max_popup_height = 10
+endif
 
 " set default highlighting groups
 highlight default DeuteriumSuccess ctermfg=green
