@@ -28,6 +28,7 @@ function! deuterium#start()
     echomsg '[deuterium] kernel is booting up @pid '.jobpid(s:kernel_jobid)
     " need to wait for kernel to properly boot
     sleep 1
+    return 0
 endfunction
 
 
@@ -48,6 +49,7 @@ function! deuterium#shutdown()
     " need to wait for kernel to clean up connection file
     sleep 500m
     unlet s:kernel_jobid
+    return 0
 endfunction
 
 
@@ -58,6 +60,7 @@ function! deuterium#connect()
     endif
     echomsg '[deuterium] connecting to kernel'
     python3 Deuterium.connect()
+    return 0
 endfunction
 
 
@@ -147,6 +150,7 @@ function! deuterium#execute() range
             normal +
         endif
     endtry
+    return 0
 endfunction
 
 
