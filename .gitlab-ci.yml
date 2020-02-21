@@ -16,6 +16,7 @@ cache:
         - venv/
 before_script:
     - uname -a
+    - apt-get install software-properties-common
     - add-apt-repository ppa:neovim-ppa/unstable
     - apt-get update
     - apt-get install neovim
