@@ -16,7 +16,7 @@ cache:
         - venv/
 before_script:
     - uname -a
-    - apt install neovim
+    - dnf install neovim -y
     - python -V  # Print out python version for debugging
     - pip install virtualenv
     - virtualenv ext/venv
