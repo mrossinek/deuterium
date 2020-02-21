@@ -16,6 +16,7 @@ cache:
         - venv/
 before_script:
     - uname -a
+    - apt install neovim
     - python -V  # Print out python version for debugging
     - pip install virtualenv
     - virtualenv ext/venv
@@ -24,7 +25,7 @@ before_script:
 
 test:
     script:
-        - nvim -N --noplugin -u <(\cat << VIMRC                                                                              00:13:41
+        - nvim -N --noplugin -u <(\cat << VIMRC
           let g:python3_host_prog='./ext/venv/bin/python'
           set rtp+=./ext/vader.vim
           source ./ext/vader.vim/plugin/vader.vim
