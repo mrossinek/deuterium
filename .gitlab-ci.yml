@@ -16,10 +16,12 @@ cache:
         - venv/
 before_script:
     - uname -a
-    - apt-get install python-software-properties
-    - add-apt-repository ppa:neovim-ppa/unstable
-    - apt-get update
-    - apt-get install neovim
+    - apt-get install ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip
+    - git clone https://github.com/neovim/neovim.git
+    - cd neovim
+    - make CMAKE_BUILD_TYPE=Release
+    - make install
+    - cd ../
     - python -V  # Print out python version for debugging
     - pip install virtualenv
     - virtualenv ext/venv
@@ -34,5 +36,6 @@ test:
           source ./ext/vader.vim/plugin/vader.vim
           set rtp+=.
           source ./plugin/deuterium.vim
-          VIMRC) -c 'Vader! test/*.vader' > /dev/null
+          VIMRC
+          ) -c 'Vader! test/*.vader' > /dev/null
 
