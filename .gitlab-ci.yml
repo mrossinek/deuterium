@@ -16,7 +16,6 @@ cache:
         - venv/
 before_script:
     - uname -a
-    - apt install fuse
     - wget "https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage"
     - chmod +x nvim.appimage
     - python -V  # Print out python version for debugging
