@@ -14,7 +14,7 @@ WORKDIR ../deuterium
 RUN pip install virtualenv ipykernel jupyter_client
 RUN virtualenv ext/venv \
     && chmod u+x ./ext/venv/bin/activate
-RUN /bin/bash -c "source ./ext/venv/bin/activate && pip install pynvim"
+RUN /bin/bash -c "source ./ext/venv/bin/activate && pip install ipykernel jupyter_client pynvim"
 
 COPY . .
 
