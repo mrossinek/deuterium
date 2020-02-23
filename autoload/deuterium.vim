@@ -83,23 +83,18 @@ function! deuterium#auto_select()
             break
         endif
     endfor
-    " find last line
-    for last_line in range(initial_line, line('$'), 1)
+    " find first non-empty zero-indent level line
+    for after_last in range(min([initial_line+1, line('$')]), line('$')+1, 1)
+        if getline(after_last) ==# ''
+            continue
+        elseif indent(after_last) ==# 0
+            break
+        endif
+    endfor
+    " backtrack to last non-empty line before this one
+    for last_line in range(max([after_last-1, initial_line]), initial_line, -1)
         if getline(last_line) !=# ''
-            if indent(last_line+1) ==# 0 && getline(last_line+1) !=# ''
-                " stop at empty line if the following one is a non-empty
-                " zero-indented level line
-                break
-            endif
-        else
-            " current line is not empty
-            if indent(last_line+1) !=# 0
-                continue
-            else
-                " if the next line has zero-indent we went a step too far
-                let last_line -= 1
-                break
-            endif
+            break
         endif
     endfor
     echo [first_line, last_line]
