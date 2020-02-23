@@ -1,0 +1,30 @@
+image: docker:latest
+
+services:
+    - docker:dind
+
+stages:
+    - build
+    - test
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+build:
+    stage: build
+    before_script:
+        - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    script:
+        - docker build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest .
+        - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest
+    after_script:
+        - docker logout ${ci_registry}
+
+test:
+    stage: test
+    before_script:
+        - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    script:
+        - docker run ${CI_REGISTRY}/${CI_PROJECT_PATH}
+    after_script:
+        - docker logout ${ci_registry}

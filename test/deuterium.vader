@@ -1,0 +1,34 @@
+Execute (TODO checkhealth):
+  checkhealth
+  AssertEqual [''], getline(0, '$')
+
+Execute (test init):
+  AssertEqual 0, &compatible
+  AssertEqual 1, has('pythonx')
+  AssertEqual 1, has('python3')
+  source ./plugin/deuterium.vim
+  AssertEqual 1, g:deuterium#loaded
+  AssertEqual 1, g:deuterium#init_success
+
+Execute (test start):
+  AssertEqual 0, deuterium#start()
+
+Execute (test connect):
+  AssertEqual 0, deuterium#connect()
+
+Execute (test send failure):
+  let [success, stdout, _] = deuterium#send('print(dummy)')
+  AssertEqual 0, success
+  AssertEqual "NameError: name 'dummy' is not defined", stdout
+
+Execute (test send success):
+  AssertEqual [1, '', ''], deuterium#send('dummy = 10')
+  AssertEqual [1, "10\n", ''], deuterium#send('print(dummy)')
+
+Execute (test send empty):
+  AssertThrows deuterium#send('')
+
+Execute (test shutdown):
+  AssertEqual 0, deuterium#shutdown()
+
+# vim: ft=vader
