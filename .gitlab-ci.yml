@@ -1,37 +1,27 @@
-image: python:latest
+image: docker:latest
 
-# Change pip's cache directory to be inside the project directory since we can
-# only cache local items.
-variables:
-  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+services:
+    - docker:dind
 
-# Pip's cache doesn't store the python packages
-# https://pip.pypa.io/en/stable/reference/pip_install/#caching
-#
-# If you want to also cache the installed packages, you have to install
-# them in a virtualenv and cache it as well.
-cache:
-    paths:
-        - .cache/pip
-        - venv/
-before_script:
-    - uname -a
-    - wget "https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage"
-    - chmod +x nvim.appimage
-    - python -V  # Print out python version for debugging
-    - pip install virtualenv
-    - virtualenv ext/venv
-    - source ext/venv/bin/activate
-    - pip install ipykernel jupyter_client pynvim
+stages:
+    - build
+    - test
+
+build:
+    stage: build
+    before_script:
+        - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    script:
+        - docker build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest .
+        - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest
+    after_script:
+        - docker logout ${ci_registry}
 
 test:
+    stage: test
+    before_script:
+        - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
     script:
-        - ../nvim.appimage -N --noplugin -u <(\cat << VIMRC
-          let g:python3_host_prog='./ext/venv/bin/python'
-          set rtp+=./ext/vader.vim
-          source ./ext/vader.vim/plugin/vader.vim
-          set rtp+=.
-          source ./plugin/deuterium.vim
-          VIMRC
-          ) -c 'Vader! test/*.vader' > /dev/null
-
+        - docker run ${CI_REGISTRY}/${CI_PROJECT_PATH}
+    after_script:
+        - docker logout ${ci_registry}
