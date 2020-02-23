@@ -64,6 +64,48 @@ function! deuterium#connect()
 endfunction
 
 
+function! deuterium#auto_select()
+    let initial_line = line('.')
+    " empty line case
+    if getline(initial_line) ==# ''
+        " only relevant if surrounded by zero-indent level lines
+        if indent(max([initial_line-1, 1])) ==# 0
+                    \ || indent(min([initial_line+1, line('$')])) ==# 0
+            return
+        endif
+    endif
+    " find first line
+    for first_line in range(initial_line, 1, -1)
+        " stop at any non-empty zero-indent level line
+        if getline(first_line) ==# ''
+            continue
+        elseif indent(first_line) ==# 0
+            break
+        endif
+    endfor
+    " find last line
+    for last_line in range(initial_line, line('$'), 1)
+        if getline(last_line) !=# ''
+            if indent(last_line+1) ==# 0 && getline(last_line+1) !=# ''
+                " stop at empty line if the following one is a non-empty
+                " zero-indented level line
+                break
+            endif
+        else
+            " current line is not empty
+            if indent(last_line+1) !=# 0
+                continue
+            else
+                " if the next line has zero-indent we went a step too far
+                let last_line -= 1
+                break
+            endif
+        endif
+    endfor
+    echo [first_line, last_line]
+endfunction
+
+
 function! deuterium#execute() range
     if !exists('s:kernel_jobid')
         echoerr '[deuterium] please connect to a kernel first!'
