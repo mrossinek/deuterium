@@ -35,7 +35,7 @@ endfunction
 function! deuterium#shutdown()
     if !exists('s:kernel_jobid')
         " no kernel registered
-        return
+        return 1
     endif
     " close remaining popup windows
     for [extmark, winid] in items(s:deuterium_extmarks)
