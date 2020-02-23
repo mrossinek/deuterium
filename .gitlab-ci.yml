@@ -26,12 +26,12 @@ before_script:
 
 test:
     script:
-        - ../nvim.appimage -N --noplugin -u <(\cat << VIMRC
-          let g:python3_host_prog='./ext/venv/bin/python'
-          set rtp+=./ext/vader.vim
-          source ./ext/vader.vim/plugin/vader.vim
-          set rtp+=.
-          source ./plugin/deuterium.vim
-          VIMRC
-          ) -c 'Vader! test/*.vader' > /dev/null
+        - ./nvim.appimage -N --noplugin -u <(cat << VIMRC
+            let g:python3_host_prog='./ext/venv/bin/python'
+            set rtp+=./ext/vader.vim
+            source ./ext/vader.vim/plugin/vader.vim
+            set rtp+=.
+            source ./plugin/deuterium.vim
+            VIMRC
+            ) -c 'Vader! test/*.vader' > /dev/null
 
