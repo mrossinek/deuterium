@@ -60,7 +60,7 @@ class Deuterium:
         The code send is automatically grabbed from the current selection in vim.
         """
         code = vim.eval("a:code")
-        Deuterium.msg_id = Deuterium.client.execute(code)
+        Deuterium.msg_id = Deuterium.client.execute(code, stop_on_error=False)
         success = False
         stdout = ''
         stderr = ''
@@ -72,6 +72,7 @@ class Deuterium:
                 continue
             if msg['parent_header']['msg_id'] == Deuterium.msg_id \
                     and msg['msg_type'] == 'execute_reply':
+                # TODO handle all possible statuses (incl. 'aborted')
                 if msg['content']['status'] == 'ok':
                     success = True
                     # if the command ran successfully, check for any output on the stream channels
@@ -81,7 +82,8 @@ class Deuterium:
                 else:
                     # otherwise we gather some information on the error
                     success = False
-                    stdout = msg['content']['ename'] + ': ' + msg['content']['evalue']
+                    stdout = '{}: {}'.format(msg['content'].get('ename', ''),
+                                             msg['content'].get('evalue', ''))
                     stderr = '\n'.join(msg['content'].get('traceback', ''))
                     ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
                     stderr = ansi_escape.sub('', stderr)

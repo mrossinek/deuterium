@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add vim documentation
 - trigger `+` at the end of `DeuteriumExecute` (37297755)
 - clear virtual text on all lines that are executed (8b87886e)
+- unittests and Gitlab CI (!2)
 
 ### Changed
 - split `DeuteriumSend` into an execute and internal send function (d248dbd)
