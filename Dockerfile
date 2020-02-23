@@ -11,8 +11,6 @@ RUN make CMAKE_BUILD_TYPE=RELEASE && make install
 
 WORKDIR ../deuterium
 
-RUN git submodule update --init
-
 RUN pip install virtualenv
 RUN virtualenv ext/venv \
     && chmod u+x ./ext/venv/bin/activate \
