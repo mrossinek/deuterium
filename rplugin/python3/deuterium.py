@@ -81,7 +81,8 @@ class Deuterium:
                 else:
                     # otherwise we gather some information on the error
                     success = False
-                    stdout = msg['content']['ename'] + ': ' + msg['content']['evalue']
+                    stdout = '{}: {}'.format(msg['content'].get('ename', ''),
+                                             msg['content'].get('evalue', ''))
                     stderr = '\n'.join(msg['content'].get('traceback', ''))
                     ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
                     stderr = ansi_escape.sub('', stderr)
