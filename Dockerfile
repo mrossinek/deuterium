@@ -11,11 +11,10 @@ RUN make CMAKE_BUILD_TYPE=RELEASE && make install
 
 WORKDIR ../deuterium
 
-RUN pip install virtualenv
+RUN pip install virtualenv ipykernel jupyter_client
 RUN virtualenv ext/venv \
-    && chmod u+x ./ext/venv/bin/activate \
-    && ./ext/venv/bin/activate
-RUN pip install ipykernel jupyter_client pynvim
+    && chmod u+x ./ext/venv/bin/activate
+RUN /bin/bash -c "source ./ext/venv/bin/activate && pip install pynvim"
 
 COPY . .
 
