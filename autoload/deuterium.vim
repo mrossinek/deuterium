@@ -147,7 +147,7 @@ function! deuterium#execute() range
     finally
         " if configured: jump to next line
         if g:deuterium#jump_line_after_execute
-            normal +
+            normal! +
         endif
     endtry
     return 0
@@ -189,14 +189,14 @@ function! deuterium#preview(text)
     call nvim_buf_set_lines(preview_buf, 0, -1, v:true, parsed)
     try
         " try reaching preview window
-        normal P
+        normal! P
     catch /^Vim\%((\a\+)\)\=:E441/
         " if failed, open a new one
         10split +setlocal\ previewwindow
     finally
         " open current buffer
         call nvim_set_current_buf(preview_buf)
-        normal p
+        normal! p
     endtry
 endfunction
 
@@ -206,6 +206,7 @@ function! deuterium#send(code)
         throw 'EmptyCode'
     endif
     python3 Deuterium.send()
+    " vint: -ProhibitUsingUndeclaredVariable
     " return values are set inside python function
     return [success, stdout, stderr]
 endfunction
