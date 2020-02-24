@@ -76,8 +76,8 @@ In case you do not have unicode support: the default is U+2718; the heavy
 ballot X.
 
 *g:deuterium#jump_line_after_execute*        `Default: 1`
-By default deuterium will trigger |+| after a command was executed.
-You can disable this by setting this option to 0.
+By default, deuterium will jump to the first line after the executed code
+block. You can disable this by setting this option to 0.
 
 *g:deuterium#stdout_handler*                 `Default: popup`
 Can be one of `popup` (default), `preview` or `none`.

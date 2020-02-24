@@ -193,7 +193,7 @@ function! deuterium#execute()
     finally
         " if configured: jump to next line
         if g:deuterium#jump_line_after_execute
-            normal! +
+            call cursor(last_line+1, 0)
         endif
     endtry
     return 0
