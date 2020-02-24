@@ -5,6 +5,8 @@ endif
 
 let g:deuterium#loaded = 1
 
+scriptencoding utf-8
+
 if !deuterium#initialize()
     finish
 endif
