@@ -71,7 +71,7 @@ function! deuterium#auto_select()
         " only relevant if surrounded by zero-indent level lines
         if indent(max([initial_line-1, 1])) ==# 0
                     \ || indent(min([initial_line+1, line('$')])) ==# 0
-            return
+            throw 'EmptyCode'
         endif
     endif
     " find first line
@@ -107,7 +107,14 @@ function! deuterium#execute()
         return 1
     endif
     " gather code which is to be executed
-    let [first_line, last_line] = deuterium#auto_select()
+    try
+        let [first_line, last_line] = deuterium#auto_select()
+    catch /EmptyCode/
+        if g:deuterium#jump_line_after_execute
+            normal! +
+        endif
+        return 0
+    endtry
     " pre-process lines
     let code = ''
     let popup_col = 0
