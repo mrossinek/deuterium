@@ -97,19 +97,21 @@ function! deuterium#auto_select()
             break
         endif
     endfor
-    echo [first_line, last_line]
+    return [first_line, last_line]
 endfunction
 
 
-function! deuterium#execute() range
+function! deuterium#execute()
     if !exists('s:kernel_jobid')
         echoerr '[deuterium] please connect to a kernel first!'
         return 1
     endif
+    " gather code which is to be executed
+    let [first_line, last_line] = deuterium#auto_select()
+    " pre-process lines
     let code = ''
     let popup_col = 0
-    " gather code which is to be executed
-    for line in range(a:firstline, a:lastline)
+    for line in range(first_line, last_line)
         let text = getline(line)
         let code .= text . "\n"
         " update popup_col position
@@ -117,11 +119,11 @@ function! deuterium#execute() range
         " remove any virtualtext in executed lines
         call nvim_buf_set_virtual_text(0, s:deuterium_namespace, line-1, [], {})
     endfor
-    let popup_row = a:lastline - 1
+    let popup_row = last_line - 1
     " close any popups in the region
     let local_extmarks = nvim_buf_get_extmarks(0, s:deuterium_namespace,
-                \ [max([a:firstline - 1 - g:deuterium#max_popup_height, line('w0')]), 0],
-                \ [min([a:lastline + 1 - g:deuterium#max_popup_height, line('w$')]), 0],
+                \ [max([first_line - 1 - g:deuterium#max_popup_height, line('w0')]), 0],
+                \ [min([last_line + 1 - g:deuterium#max_popup_height, line('w$')]), 0],
                 \ {})
     for [extmark, _, _] in local_extmarks
         let index = index(keys(s:deuterium_extmarks), string(extmark))
