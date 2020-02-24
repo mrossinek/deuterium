@@ -1,7 +1,3 @@
-Execute (TODO checkhealth):
-  checkhealth
-  AssertEqual [''], getline(0, '$')
-
 Execute (test init):
   AssertEqual 0, &compatible
   AssertEqual 1, has('pythonx')
