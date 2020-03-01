@@ -5,6 +5,8 @@ endif
 
 let g:deuterium#loaded = 1
 
+scriptencoding utf-8
+
 if !deuterium#initialize()
     finish
 endif
@@ -39,7 +41,7 @@ highlight default link DeuteriumError Error
 command! DeuteriumStart call deuterium#start()
 command! DeuteriumShutdown call deuterium#shutdown()
 command! DeuteriumConnect call deuterium#connect()
-command! -range DeuteriumExecute <line1>,<line2>call deuterium#execute()
+command! DeuteriumExecute call deuterium#execute()
 
 " set default mapping
 if !hasmapto('<Plug>DeuteriumExecute')

@@ -1,0 +1,74 @@
+Given python (original code):
+  import datetime
+
+  now = datetime.datetime.now()
+  print(a)
+
+  def say_hi(name):
+      print('Hi, ' + name)
+  def say_bye(name):
+      print('Bye, ' + name)
+
+  def prompt_name(name):
+      print(name + ', how old are you?')
+      age = input('>>> ')
+      print(age)
+
+
+  class Foo:
+      def __init__(self, name):
+          self.name = name
+
+
+  class Bar(Foo):
+      def __init__(self, name):
+          super.__init__(name)
+
+      def __repr__(self):
+          return name
+
+Execute (replace with auto selections):
+  let selections = []
+  for line in range(1, line('$'))
+    call cursor(line, 1)
+    try
+      let selections += [deuterium#auto_select()]
+    catch /EmptyCode/
+      let selections += [0]
+    endtry
+  endfor
+  AssertEqual line('$'), len(selections)
+  for line in range(1, line('$'))
+    call setline(line, string(selections[line-1]))
+  endfor
+
+Expect (expected selections):
+  [1, 1]
+  0
+  [3, 3]
+  [4, 4]
+  0
+  [6, 7]
+  [6, 7]
+  [8, 9]
+  [8, 9]
+  0
+  [11, 14]
+  [11, 14]
+  [11, 14]
+  [11, 14]
+  0
+  0
+  [17, 19]
+  [17, 19]
+  [17, 19]
+  0
+  0
+  [22, 27]
+  [22, 27]
+  [22, 27]
+  [22, 27]
+  [22, 27]
+  [22, 27]
+
+# vim: ft=vader
