@@ -100,6 +100,27 @@ function! deuterium#auto_select()
     return [first_line, last_line]
 endfunction
 
+function! deuterium#find_code_cell()
+    if g:deuterium#cell_marker ==# v:null
+        throw 'CellsDisabled'
+    endif
+    let initial_line = line('.')
+    let pattern = '^#\s*' . g:deuterium#cell_marker
+    for first_line in range(initial_line, 0, -1)
+        if match(getline(first_line), pattern) ==# 0
+            break
+        endif
+    endfor
+    for last_line in range(initial_line+1, line('$')+1, 1)
+        if match(getline(last_line), pattern) ==# 0
+            break
+        endif
+    endfor
+    if first_line ==# 0 && last_line ==# line('$')+1
+        throw 'EmptyCode'
+    endif
+    return [first_line+1, last_line-1]
+endfunction
 
 function! deuterium#execute()
     if !exists('s:kernel_jobid')
@@ -108,12 +129,16 @@ function! deuterium#execute()
     endif
     " gather code which is to be executed
     try
-        let [first_line, last_line] = deuterium#auto_select()
-    catch /EmptyCode/
-        if g:deuterium#jump_line_after_execute
-            normal! +
-        endif
-        return 0
+        let [first_line, last_line] = deuterium#find_code_cell()
+    catch /CellsDisabled\|EmptyCode/
+        try
+            let [first_line, last_line] = deuterium#auto_select()
+        catch /EmptyCode/
+            if g:deuterium#jump_line_after_execute
+                normal! +
+            endif
+            return 0
+        endtry
     endtry
     " pre-process lines
     let code = ''

@@ -93,6 +93,12 @@ there is more than a single line.
 The maximum height a popup window can take. This value is also used to search
 up- and downwards for any popups to be closed when a nearby line is executed.
 
+*g:deuterium#cell_marker*                    `Default: %%`
+The indicator string that should be placed in the beginning of a single-line
+comment to mark the boundaries of an execution cell. If you would like to
+disable cell execution mode (e.g. for performance reasons in large files) set
+this variable to |v:null|.
+
 ------------------------------------------------------------------------------
 HIGHLIGHTING                                     *deuterium-highlighting*
 
