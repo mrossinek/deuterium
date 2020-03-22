@@ -44,7 +44,7 @@ highlight default link DeuteriumError Error
 command! DeuteriumStart call deuterium#start()
 command! DeuteriumShutdown call deuterium#shutdown()
 command! DeuteriumConnect call deuterium#connect()
-command! DeuteriumExecute call deuterium#execute()
+command! -range DeuteriumExecute <line1>,<line2>call deuterium#execute()
 
 " set default mapping
 if !hasmapto('<Plug>DeuteriumExecute')
