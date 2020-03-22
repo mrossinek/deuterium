@@ -105,7 +105,7 @@ function! deuterium#find_code_cell()
         throw 'CellsDisabled'
     endif
     let initial_line = line('.')
-    let pattern = '^#\s*' . g:deuterium#cell_marker
+    let pattern = '\s*#\s*' . g:deuterium#cell_marker
     for first_line in range(initial_line, 0, -1)
         if match(getline(first_line), pattern) ==# 0
             break

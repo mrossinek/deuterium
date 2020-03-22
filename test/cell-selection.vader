@@ -24,6 +24,7 @@ Given python (original code):
       def __init__(self, name):
           super.__init__(name)
 
+      # %% indented marker
       def __repr__(self):
           return name
 
@@ -63,12 +64,13 @@ Expect (expected selections):
   [17, 20]
   [17, 20]
   [17, 20]
-  [22, 27]
-  [22, 27]
-  [22, 27]
-  [22, 27]
-  [22, 27]
-  [22, 27]
-  [22, 27]
+  [22, 25]
+  [22, 25]
+  [22, 25]
+  [22, 25]
+  [22, 25]
+  [27, 28]
+  [27, 28]
+  [27, 28]
 
 # vim: ft=vader
