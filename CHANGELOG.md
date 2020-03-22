@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - code cells may be used to customize execution blocks (!4)
+- motion-based code selection for execution (!5)
 
 ### Changed
 - `<S-CR>` no longer takes a range and instead relies on automatic selection of

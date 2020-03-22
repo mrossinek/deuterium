@@ -119,13 +119,28 @@ Which is used for error output in virtual text.
 ------------------------------------------------------------------------------
 MAPPINGS                                         *deuterium-mappings*
 
-Deuterium provides a single mapping by default. Everything else is done via
+Deuterium provides two mappings by default. Everything else is done via
 |deuterium-commands|.
 
 *<S-Cr>*
 *<S-CR>*                                     `Default: <Plug>DeuteriumExecute`
+This mapping is used to execute a piece of code. By default, the lines of code
+are selected automatically based on the indent level or the code cell (see
+also |g:deuteirum#cell_marker|).
+However, this mapping may also be used in visual mode to overwrite any
+automatic code selection.
 In order to overwrite this mapping you can simply provide a new map to
 *<Plug>DeuteriumExecute* before loading the plugin.
+
+*<C-Cr>*
+*<C-CR>*                          `Default: <Plug>DeuteriumNormalMotionSelect`
+                                    and  `<Plug>DeuteriumVisualMotionSelect`
+This mapping provides motion-based code selection for the execution. Thus, it
+always requires the manual selection through the user.
+For convenience, it also works in visual mode.
+In order to overwrite this mapping in either normal or visual mode you can
+simply provide a new map to *<Plug>DeuteriumNormalMotionSelect* or
+*<Plug>DeuteriumVisualMotionSelect* before loading the plugin.
 
 ------------------------------------------------------------------------------
 AUTOCOMMANDS                                     *deuterium-autocommands*

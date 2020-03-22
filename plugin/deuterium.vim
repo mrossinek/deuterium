@@ -44,13 +44,25 @@ highlight default link DeuteriumError Error
 command! DeuteriumStart call deuterium#start()
 command! DeuteriumShutdown call deuterium#shutdown()
 command! DeuteriumConnect call deuterium#connect()
-command! DeuteriumExecute call deuterium#execute()
+command! -range DeuteriumExecute <line1>,<line2>call deuterium#execute()
 
 " set default mapping
 if !hasmapto('<Plug>DeuteriumExecute')
     map <S-CR> <Plug>DeuteriumExecute
 endif
 noremap <unique> <script> <silent> <Plug>DeuteriumExecute :DeuteriumExecute<CR>
+
+if !hasmapto('<Plug>DeuteriumNormalMotionSelect')
+    nmap <C-CR> <Plug>DeuteriumNormalMotionSelect
+endif
+nmap <unique> <script> <silent> <Plug>DeuteriumNormalMotionSelect
+            \ :set opfunc=deuterium#motion_select<CR>g@
+
+if !hasmapto('<Plug>DeuteriumVisualMotionSelect')
+    vmap <C-CR> <Plug>DeuteriumVisualMotionSelect
+endif
+vmap <unique> <script> <silent> <Plug>DeuteriumVisualMotionSelect
+            \ :<C-U>call deuterium#motion_select(visualmode(), v:true)<CR>
 
 " set default autocommands
 augroup DeuteriumEnter

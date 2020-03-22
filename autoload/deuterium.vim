@@ -122,24 +122,46 @@ function! deuterium#find_code_cell()
     return [first_line+1, last_line-1]
 endfunction
 
-function! deuterium#execute()
+function! deuterium#motion_select(type, ...)
+    let sel_save = &selection
+    let &selection = 'inclusive'
+    let reg_save = @@
+
+    if a:0  " invoked from visual mode
+        silent execute 'normal! gvy'
+    else
+        silent execute "normal! '[V']y"
+    endif
+
+    execute ":'<,'>call deuterium#execute()"
+
+    let &selection = sel_save
+    let @@ = reg_save
+endfunction
+
+function! deuterium#execute() range
     if !exists('s:kernel_jobid')
         echoerr '[deuterium] please connect to a kernel first!'
         return 1
     endif
     " gather code which is to be executed
-    try
-        let [first_line, last_line] = deuterium#find_code_cell()
-    catch /CellsDisabled\|EmptyCode/
+    if a:firstline !=# a:lastline
+        " manual selection by user
+        let [first_line, last_line] = [a:firstline, a:lastline]
+    else
         try
-            let [first_line, last_line] = deuterium#auto_select()
-        catch /EmptyCode/
-            if g:deuterium#jump_line_after_execute
-                normal! +
-            endif
-            return 0
+            let [first_line, last_line] = deuterium#find_code_cell()
+        catch /CellsDisabled\|EmptyCode/
+            try
+                let [first_line, last_line] = deuterium#auto_select()
+            catch /EmptyCode/
+                if g:deuterium#jump_line_after_execute
+                    normal! +
+                endif
+                return 0
+            endtry
         endtry
-    endtry
+    endif
     " pre-process lines
     let code = ''
     let popup_col = 0
