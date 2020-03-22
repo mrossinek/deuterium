@@ -73,4 +73,9 @@ Expect (expected selections):
   [27, 28]
   [27, 28]
 
+Execute (disable code cells):
+  let g:deuterium#cell_marker = v:null
+  AssertThrows call deuterium#find_code_cell()
+  AssertEqual 'CellsDisabled', get(g:, 'vader_exception')
+
 # vim: ft=vader

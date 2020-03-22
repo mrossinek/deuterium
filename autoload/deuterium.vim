@@ -101,7 +101,7 @@ function! deuterium#auto_select()
 endfunction
 
 function! deuterium#find_code_cell()
-    if g:deuterium#cell_marker ==# v:null
+    if g:deuterium#cell_marker is v:null
         throw 'CellsDisabled'
     endif
     let initial_line = line('.')
