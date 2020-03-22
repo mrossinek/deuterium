@@ -1,0 +1,74 @@
+Given python (original code):
+  import datetime
+
+  now = datetime.datetime.now()
+  print(a)
+  # %%
+  def say_hi(name):
+      print('Hi, ' + name)
+  def say_bye(name):
+      print('Bye, ' + name)
+
+  #  %%
+  def prompt_name(name):
+      print(name + ', how old are you?')
+      age = input('>>> ')
+      print(age)
+  #%%
+  class Foo:
+      def __init__(self, name):
+          self.name = name
+
+  # %% Bar extension
+  class Bar(Foo):
+      def __init__(self, name):
+          super.__init__(name)
+
+      def __repr__(self):
+          return name
+
+Execute (replace with cell selections):
+  let selections = []
+  for line in range(1, line('$'))
+    call cursor(line, 1)
+    try
+      let selections += [deuterium#find_code_cell()]
+    catch /EmptyCode/
+      let selections += [0]
+    endtry
+  endfor
+  AssertEqual line('$'), len(selections)
+  for line in range(1, line('$'))
+    call setline(line, string(selections[line-1]))
+  endfor
+
+Expect (expected selections):
+  [1, 4]
+  [1, 4]
+  [1, 4]
+  [1, 4]
+  [6, 10]
+  [6, 10]
+  [6, 10]
+  [6, 10]
+  [6, 10]
+  [6, 10]
+  [12, 15]
+  [12, 15]
+  [12, 15]
+  [12, 15]
+  [12, 15]
+  [17, 20]
+  [17, 20]
+  [17, 20]
+  [17, 20]
+  [17, 20]
+  [22, 27]
+  [22, 27]
+  [22, 27]
+  [22, 27]
+  [22, 27]
+  [22, 27]
+  [22, 27]
+
+# vim: ft=vader
