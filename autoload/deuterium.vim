@@ -122,6 +122,23 @@ function! deuterium#find_code_cell()
     return [first_line+1, last_line-1]
 endfunction
 
+function! deuterium#motion_select(type, ...)
+    let sel_save = &selection
+    let &selection = 'inclusive'
+    let reg_save = @@
+
+    if a:0  " invoked from visual mode
+        silent execute 'normal! gvy'
+    else
+        silent execute "normal! '[V']y"
+    endif
+
+    execute ":'<,'>call deuterium#execute()"
+
+    let &selection = sel_save
+    let @@ = reg_save
+endfunction
+
 function! deuterium#execute() range
     if !exists('s:kernel_jobid')
         echoerr '[deuterium] please connect to a kernel first!'
