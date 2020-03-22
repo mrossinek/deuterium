@@ -30,6 +30,9 @@ endif
 if !exists('g:deuterium#max_popup_height')
     let g:deuterium#max_popup_height = 10
 endif
+if !exists('g:deuterium#cell_marker')
+    let g:deuterium#cell_marker = '%%'
+endif
 
 " set default highlighting groups
 highlight default DeuteriumSuccess ctermfg=green

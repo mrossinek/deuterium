@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- code cells may be used to customize execution blocks (!4)
+
 ### Changed
 - `<S-CR>` no longer takes a range and instead relies on automatic selection of
     the block of code based on the indent level (f11f8b4)
