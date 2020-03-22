@@ -1,12 +1,7 @@
-Execute (TODO checkhealth):
-  checkhealth
-  AssertEqual [''], getline(0, '$')
-
 Execute (test init):
   AssertEqual 0, &compatible
   AssertEqual 1, has('pythonx')
   AssertEqual 1, has('python3')
-  source ./plugin/deuterium.vim
   AssertEqual 1, g:deuterium#loaded
   AssertEqual 1, g:deuterium#init_success
 
