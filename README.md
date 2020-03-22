@@ -23,7 +23,7 @@ allows in-line feedback on the execution of your Python code.
 
 ## Installation
 Install deuterium with your favorite plugin manager.
-Furtermore, this plugin requires the `ipykernel` and `jupyter_client` python
+Furthermore, this plugin requires the `ipykernel` and `jupyter_client` python
 packages.
 You can simply install them with pip: `pip install ipykernel jupyter_client`
 

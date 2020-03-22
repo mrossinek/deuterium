@@ -15,7 +15,7 @@ USAGE                                            *deuterium-usage*
 
 Deuterium will automatically start an IPython kernel and connect to it in the
 background whenever you open a Python file.
-If you want to change this behaviour please refer to |deuterium-autocommands|.
+If you want to change this behavior please refer to |deuterium-autocommands|.
 
 You can execute any set of lines from your file with the |:DeuteriumExecute|
 command.
@@ -31,7 +31,7 @@ COMMANDS                                         *deuterium-commands*
 *:DeuteriumStart*
 This command is used to start the an IPython kernel in the background. Due to
 some timing issues this command implies a delay of 1 second.
-It is run implicitely in the |DeuteriumEnter| autocommand.
+It is run implicitly in the |DeuteriumEnter| autocommand.
 
 *:DeuteriumShutdown*
 This command is used to shutdown the registered kernel. In order to guarantee
@@ -126,7 +126,7 @@ Deuterium provides two mappings by default. Everything else is done via
 *<S-CR>*                                     `Default: <Plug>DeuteriumExecute`
 This mapping is used to execute a piece of code. By default, the lines of code
 are selected automatically based on the indent level or the code cell (see
-also |g:deuteirum#cell_marker|).
+also |g:deuterium#cell_marker|).
 However, this mapping may also be used in visual mode to overwrite any
 automatic code selection.
 In order to overwrite this mapping you can simply provide a new map to
