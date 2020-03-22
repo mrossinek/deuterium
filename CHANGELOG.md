@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- `<S-CR>` no longer takes a range and instead relies on automatic selection of
+    the block of code based on the indent level (f11f8b4)
+- if `jump_line_after_execute` is set the cursor will jump after the end of the
+    executed block of code (457e307)
+
 
 ## [0.1] - 2020-02-23
 
