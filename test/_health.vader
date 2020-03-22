@@ -1,4 +1,4 @@
-Execute (TODO checkhealth):
+Execute (TODO checkhealth - debug info):
   checkhealth
   AssertEqual [''], getline(0, '$')
 
