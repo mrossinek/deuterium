@@ -177,7 +177,7 @@ function! deuterium#execute() range
     " close any popups in the region
     let local_extmarks = nvim_buf_get_extmarks(0, s:deuterium_namespace,
                 \ [max([first_line - 1 - g:deuterium#max_popup_height, line('w0')]), 0],
-                \ [min([last_line + 1 - g:deuterium#max_popup_height, line('w$')]), 0],
+                \ [min([last_line + 1 + g:deuterium#max_popup_height, line('w$')]), 0],
                 \ {})
     for [extmark, _, _] in local_extmarks
         let index = index(keys(s:deuterium_extmarks), string(extmark))
