@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+## [0.3] - 2020-05-04
+
+### Added
+
+- preview image files (35f4868)
+
+
 ## [0.2] - 2020-03-22
 
 ### Added
@@ -43,7 +50,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - initial version with basic functionality
 
 
-[Unreleased]: https://gitlab.com/mrossinek/deuterium/-/compare/v0.2...master
+[Unreleased]: https://gitlab.com/mrossinek/deuterium/-/compare/v0.3...master
+[0.3]: https://gitlab.com/mrossinek/deuterium/-/tags/v0.3
 [0.2]: https://gitlab.com/mrossinek/deuterium/-/tags/v0.2
 [0.1]: https://gitlab.com/mrossinek/deuterium/-/tags/v0.1
 [0.0.1]: https://gitlab.com/mrossinek/deuterium/-/tags/v0.0.1
