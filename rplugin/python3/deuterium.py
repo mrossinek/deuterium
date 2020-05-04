@@ -5,6 +5,7 @@ from base64 import decodebytes
 from queue import Empty
 from tempfile import NamedTemporaryFile
 from subprocess import Popen
+from sys import platform
 import vim  # pylint: disable=import-error
 
 
@@ -117,5 +118,6 @@ class Deuterium:
                     Deuterium.image_file.write(decodebytes(
                         msg['content']['data']['image/png'].encode('utf-8')
                     ))
-                    Popen(['/usr/bin/xdg-open', Deuterium.image_file.name])
+                    open_prog = 'open' if platform == 'darwin' else 'xdg-open'
+                    Popen([open_prog, Deuterium.image_file.name])
         return msgs
