@@ -1,7 +1,10 @@
 """ Deuterium """
 
 import re
+from base64 import decodebytes
 from queue import Empty
+from tempfile import NamedTemporaryFile
+from subprocess import Popen
 import vim  # pylint: disable=import-error
 
 
@@ -16,6 +19,7 @@ class Deuterium:
     manager = None
     client = None
     msg_id = None
+    image_file = None
 
     @staticmethod
     def connect():
@@ -46,6 +50,8 @@ class Deuterium:
     def shutdown():
         """ Shutdown the Kernel
         """
+        if Deuterium.image_file:
+            Deuterium.image_file.close()
         Deuterium.msg_id = Deuterium.manager.shutdown_kernel()
         try:
             Deuterium.client.get_shell_msg(timeout=1)
@@ -102,7 +108,14 @@ class Deuterium:
         """
         msgs = []
         for msg in Deuterium.client.iopub_channel.get_msgs():
-            if msg['parent_header']['msg_id'] == Deuterium.msg_id \
-                    and msg['msg_type'] == 'stream':
-                msgs.append(msg['content'])
+            if msg['parent_header']['msg_id'] == Deuterium.msg_id:
+                if msg['msg_type'] == 'stream':
+                    msgs.append(msg['content'])
+                elif msg['msg_type'] == 'display_data' \
+                        and 'image/png' in msg['content']['data'].keys():
+                    Deuterium.image_file = NamedTemporaryFile(suffix='.png')
+                    Deuterium.image_file.write(decodebytes(
+                        msg['content']['data']['image/png'].encode('utf-8')
+                    ))
+                    Popen(['/usr/bin/xdg-open', Deuterium.image_file.name])
         return msgs
