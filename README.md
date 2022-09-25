@@ -1,5 +1,7 @@
 # Deuterium
 
+⚠️  **ARCHIVED**: I suggest to use [magma-nvim](https://github.com/dccsillag/magma-nvim) instead!
+
 ## Disclaimer
 **This is a WIP!**
 Currently only Neovim is supported!
